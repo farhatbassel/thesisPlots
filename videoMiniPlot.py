@@ -12,7 +12,7 @@ class MoviePlots():
 
     def __init__(self,F,B,Z,redshift):
         self.F = F[597:]                            # Removing early noise
-        self.B = np.sqrt(2*dataFile.B)[597:-1]      # Mostly due to the ring-in phase
+        self.B = np.sqrt(2*dataFile.B)[597:]        # Mostly due to the ring-in phase
         self.Z = Z[597:]
         self.redshift = redshift
 
@@ -23,6 +23,9 @@ class MoviePlots():
     
     def maximum_value(self, field):
         return str(max(field))[:5]
+    
+    def rms_value(self,field,index):
+        return str(field[self.cut_to_z(index)])[:5]
             
     def plot_it(self):                                                           # Plotting the data using 
         fig, ax = plt.subplots(figsize = (9,6))                                  # the publication style
@@ -36,9 +39,9 @@ class MoviePlots():
         ax.set_xticks([300,700,1000,1500,3000,4800])
         ax.set_xticklabels(['300','700','1000','1500','3000','4800'])
 
-    def draw_max_value(self):
-        plt.figtext(x = 0.575, y = 0.75, s = r'$B_{max}$ = ' + self.maximum_value(self.cut_B))          # Getting the maximum value
-        plt.figtext(x = 0.575, y = 0.34, s = r'$D\rho_{max} = $' + self.maximum_value(self.cut_F))      # until the redshift we reached
+    def draw_max_value(self,index):
+        plt.figtext(x = 0.13, y = 0.82, c= 'r', s = r'$B_{max}$ = ' + self.rms_value(self.cut_B,index))          # Getting the maximum value
+        plt.figtext(x = 0.13, y = 0.72, c='#800080', s = r'$D\rho_{max} = $' + self.rms_value(self.cut_F,index))      # until the redshift we reached
         
     def cutting_data(self):
         for index, _ in enumerate(self.redshift):
@@ -47,8 +50,8 @@ class MoviePlots():
             self.cut_B = self.B[:self.cut_to_z(index)]
 
             self.plot_it()
-            self.draw_max_value()
-            plt.savefig('/home/bassel/scatterFiles/sidePlots/sidePlot%02d'%index)           #Saving the files so that we can add them to the movie
+            self.draw_max_value(index)
+            plt.savefig('#/sidePlot%02d'%index)           #Saving the files so that we can add them to the movie
 
 plot_it = MoviePlots(dataFile.F,dataFile.B,dataFile.Z,redshift)
 MoviePlots.cutting_data(plot_it)
