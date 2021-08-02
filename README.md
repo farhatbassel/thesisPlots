@@ -1,5 +1,11 @@
 # Thesis Plots
 
+In the following I am laying out the work done for my master thesis.
+
+I worked on the evolution of density perturbations sourced by magnetic fields.
+
+I will be showing the plots that I was able to create and the code use to create them.
+
 # 1) Slices
 
 I am creating a slice plot of what is happening in the simulation at a certain redshift.
