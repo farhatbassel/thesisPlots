@@ -2,30 +2,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 import functions as fn
 
-plt.style.use('/home/bassel/Documents/Paper/plot_style.txt')
+plt.style.use('#/plot_style.txt')                   # Publication style we chose
 
-file_location = '/home/bassel/Documents/datFiles/scale_inv/512_v_a_3/'
-dataFile = fn.data(np.loadtxt(file_location+"mag_dens_pert_512_3_scale_inv.dat"))
-redshift = np.loadtxt('/home/bassel/Desktop/z.txt')[:,1]
+file_location = '#'
+data_file = fn.data(np.loadtxt(file_location+"#file"))
+redshift = np.loadtxt('#')[:,1]
 
 class MoviePlots():
 
     def __init__(self,F,B,Z,redshift):
-        self.F = F[597:]
-        self.B = np.sqrt(2*dataFile.B)[597:-1]
+        self.F = F[597:]                            # Removing early noise
+        self.B = np.sqrt(2*dataFile.B)[597:-1]      # Mostly due to the ring-in phase
         self.Z = Z[597:]
         self.redshift = redshift
 
     
-    def cut_to_z(self,index):
-        self.cut_until = np.where(np.floor(self.Z)==redshift[index])[0][0]
-        return self.cut_until
+    def cut_to_z(self,index):                                                    # Cutting the data
+        self.cut_until = np.where(np.floor(self.Z)==redshift[index])[0][0]       # Showing the evolution to a certain point 
+        return self.cut_until                                                    # in redshift           
     
     def maximum_value(self, field):
         return str(max(field))[:5]
             
-    def plot_it(self):
-        fig, ax = plt.subplots(figsize = (9,6))
+    def plot_it(self):                                                           # Plotting the data using 
+        fig, ax = plt.subplots(figsize = (9,6))                                  # the publication style
         ax.set_xlabel('Redshift z')
         ax.grid(ls = 'dotted', lw = 2, axis = 'y')
         ax.grid(ls= 'dashed', lw = 2, axis ='x')
@@ -37,8 +37,8 @@ class MoviePlots():
         ax.set_xticklabels(['300','700','1000','1500','3000','4800'])
 
     def draw_max_value(self):
-        plt.figtext(x = 0.575, y = 0.75, s = r'$B_{max}$ = ' + self.maximum_value(self.cut_B))    
-        plt.figtext(x = 0.575, y = 0.34, s = r'$D\rho_{max} = $' + self.maximum_value(self.cut_F))
+        plt.figtext(x = 0.575, y = 0.75, s = r'$B_{max}$ = ' + self.maximum_value(self.cut_B))          # Getting the maximum value
+        plt.figtext(x = 0.575, y = 0.34, s = r'$D\rho_{max} = $' + self.maximum_value(self.cut_F))      # until the redshift we reached
         
     def cutting_data(self):
         for index, _ in enumerate(self.redshift):
@@ -48,7 +48,7 @@ class MoviePlots():
 
             self.plot_it()
             self.draw_max_value()
-            plt.savefig('/home/bassel/scatterFiles/sidePlots/sidePlot%02d'%index)
+            plt.savefig('/home/bassel/scatterFiles/sidePlots/sidePlot%02d'%index)           #Saving the files so that we can add them to the movie
 
 plot_it = MoviePlots(dataFile.F,dataFile.B,dataFile.Z,redshift)
 MoviePlots.cutting_data(plot_it)
